@@ -7,6 +7,7 @@ use backend\assets\AppAsset;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
 
@@ -38,13 +39,19 @@ AppAsset::register($this);
     $menuItems = [
         ['label' => Yii::t('app','Home'), 'url' => ['/site/index']],
     ];
+
+    if (!Yii::$app->user->isGuest && Yii::$app->user->getIdentity()->roleIsAdmin()) {
+        $menuItems[] = ['label' => Yii::t('app','Dishes'), 'url' => [Url::to(['dish/index'])]];
+        $menuItems[] = ['label' => Yii::t('app','Ingredients'), 'url' => [Url::to(['ingredient/index'])]];
+    }
+
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => Yii::t('app','Login'), 'url' => ['/site/login']];
     } else {
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                Yii::t('app', 'Logout (') . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()

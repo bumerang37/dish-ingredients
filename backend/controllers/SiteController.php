@@ -1,30 +1,21 @@
 <?php
 namespace backend\controllers;
 
+use common\models\Dish;
+use common\models\Ingredient;
 use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
-    const ROLE_USER = 1;
-    const ROLE_ADMIN= 10;
-
-    public static function roles()
-    {
-        return [
-            self::ROLE_USER => Yii::t('t','User'),
-            self::ROLE_ADMIN => Yii::t('t','Admin'),
-
-        ];
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -44,12 +35,12 @@ class SiteController extends Controller
                         'roles' => ['@']
                     ],
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index',],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function($rule, $action) {
                             $user =  Yii::$app->user->getIdentity();
-                            return $user->isAdmin();
+                            return $user->roleIsAdmin();
                         },
                     ],
                 ],
@@ -94,7 +85,22 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        /** @var string $home */
+        $home = $this->frontendUrl('site','index');
+        return $this->render('index',[
+            'home' => $home
+        ]);
+    }
+
+    /**
+     * Create absolute frontend URL from backend app
+     *
+     * @var \yii\web\UrlManager $urlManagerFrontend
+     */
+    public function frontendUrl($controller, $action) {
+        $urlManagerFrontend = \Yii::$app->urlManagerFrontend;
+        return $urlManagerFrontend->createAbsoluteUrl(["$controller/$action"])
+        ;
     }
 
     /**
@@ -132,19 +138,27 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    public function getRoleName(int $id)
+    public function actionUpdate($id)
     {
-        $list = self::roles();
-        return $list[$id] ?? null;
+        $model = $this->findModel($id);
+        $data = Ingredient::find()->select(['title', 'id'])->indexBy('id')->active()->column();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+                'data' => $data
+            ]);
+        }
+    }
+    protected function findModel($id)
+    {
+        if (($model = Dish::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
-    public function isAdmin()
-    {
-        return ($this->role == self::ROLE_ADMIN);
-    }
-
-    public function isUser()
-    {
-        return ($this->role == self::ROLE_USER);
-    }
 }

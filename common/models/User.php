@@ -59,6 +59,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+
             ['role','default','value' => self::ROLE_USER],
             ['role','in','range' => [self::ROLE_USER, self::ROLE_ADMIN]]
         ];
@@ -239,19 +240,19 @@ class User extends ActiveRecord implements IdentityInterface
      * @param int $id
      * @return mixed|null
      */
-    public function getRoleName(int $id)
+    public static function getRoleName(int $id)
     {
         $list = self::roles();
         return $list[$id] ?? null;
     }
 
-    public function isAdmin()
+    public function roleIsAdmin()
     {
         return ($this->role == self::ROLE_ADMIN);
     }
 
 
-    public function isUser()
+    public function roleIsUser()
     {
         return ($this->role == self::ROLE_USER);
     }

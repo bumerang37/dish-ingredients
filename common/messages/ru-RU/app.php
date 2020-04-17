@@ -33,7 +33,39 @@ return [
     'If you forgot your password you can' => 'Если забыли пароль вы можете',
     'reset it' => 'сбросить его',
     'Need new verification email?' => 'Нужна новая почта для подтверждения?',
+    'Send' => 'Отправить',
     'Resend' => 'Отправить',
+    'Please fill out your email. A link to reset password will be sent there.' => 'Пожалуйста заполните email. Ссылка для сброса пароля придет на указанную почту.',
+    'Request password reset' => 'Запрос на сброс пароля',
+    'Resend verification email' => 'Подтверждение нового email',
+    'Please fill out your email. A verification email will be sent there.' => 'Заполните поле. Проверочный код прийдет на указанную электронную почту',
+    'Please fill out the following fields to signup:' => 'Пожалуйста заполните следующие поля чтобы зарегистрироваться:',
+    'From this page you can follow to main page and find dish by ingredients' => 'Отсюда можно перейти на главную страницу для поиска нужных блюд по ингредиентам.',
+    'Dish with same name already exists' => 'Блюдо с подобным названием уже существует !',
+
+
+    'ID' => 'ID',
+    'Title' => 'Имя',
+    'Active' => 'Показывать',
+    'Dishes' => 'Блюда',
+    'Ingredients' => 'Ингредиенты',
+    'Update' => 'Обновить',
+    'Delete' => 'Удалить',
+    'Create Dish' => 'Создать блюдо',
+    'Create Dish page' => 'Создание блюда',
+    'Create Ingredient' => 'Создать ингредиент',
+    'Create Ingredient page' => 'Создание ингредиента',
+    'Save' => 'Сохранить',
+    'In this page you can create dish, and set visibility current dish' => 'На этой странице вы можете создать блюдо, и указать его видимость',
+    'In this page you can create ingredient, and set visibility current ingredient' => 'На этой странице вы можете создать ингредиент, и указать его видимость',
+    'Update Ingredient: {name}' => 'Обновить Ингридиент: {name}',
+    'Update Dish: {name}' => 'Обновить Блюдо: {name}',
+    'Yes' => 'Да',
+    'No' => 'Нет',
+    'Logout (' => 'Выйти (',
+    'Choose ingredients' => 'Выберите ингредиенты',
+    'Clear all' => 'Очистить все',
+
 //    end frontend and backend
 
 //    console
@@ -42,6 +74,7 @@ return [
     'User status successfully changed' => 'Статус пользователя изменен успешно',
     'User with same username "{username}" doesn\'t exist' => 'Пользователя с именем "{username}" не существует',
     'Database "{dbname}" already exists' => 'База данных "{dbname}" уже существует',
+    'Go' => 'Перейти',
 
 //    end console
 

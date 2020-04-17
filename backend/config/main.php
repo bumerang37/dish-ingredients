@@ -15,6 +15,7 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -42,6 +43,18 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+            ],
+        ],
+        'urlManagerFrontend' => [
+            'class' => 'yii\web\UrlManager',
+            'baseUrl' => '',
+            'enablePrettyUrl' => true,
+            'enableStrictParsing' => false,
+            'hostInfo' => $params['frontend.protocol'] . '://' . $params['frontend.host'],
+            'showScriptName' => false,
+            'rules' => [
+                '' => 'site/index',
+                '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
 
