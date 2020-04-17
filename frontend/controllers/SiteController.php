@@ -5,6 +5,7 @@ use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -40,8 +41,27 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => false,
+                        'roles' => ['?']
+                    ]
                 ],
             ],
+//            Homepage only for auth users
+            [
+                'class' => AccessControl::className(),
+                'only' => ['index'],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+
+            ],
+
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -66,6 +86,17 @@ class SiteController extends Controller
             ],
         ];
     }
+
+//    public function beforeAction($action)
+//    {
+//        if (Yii::$app->user->isGuest) {
+//            return $this->redirect(Url::toRoute(['/site/login']));
+//        }
+//        if (!parent::beforeAction($action)) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     /**
      * Displays homepage.

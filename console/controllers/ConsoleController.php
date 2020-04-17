@@ -2,6 +2,7 @@
 
 namespace console\controllers;
 
+use common\models\User;
 use Dotenv\Dotenv;
 use mysqli;
 use Yii;
@@ -41,9 +42,57 @@ class ConsoleController extends Controller
                     echo "Database  " . $db . " is successfully created" . "\n";
                 }
             } else {
-                echo "Database " . $db . " already exists \n";
+                echo Yii::t('app','Database "{dbname}" already exists',array('dbname'=> $db)). "\n";
             }
 
+        }
+
+        return 0;
+    }
+
+    /**
+     * Set user role to "Admin" by username
+     * @param $username
+     * @return int
+     */
+    public function actionSetUserRoleToAdmin($username)
+    {
+        $user = User::getUserByUsername($username);
+        if ($user instanceof User && !empty($user)) {
+            if ($user->role == User::ROLE_ADMIN) {
+                echo Yii::t("app","User role is already \"admin\"")."\n";
+                return 0;
+            }
+            $user->role = User::ROLE_ADMIN;
+            $user->save();
+            echo Yii::t("app","User status successfully changed")."\n";
+        } elseif ($user == null) {
+            echo Yii::t("app","User with same username \"{username}\" doesn't exist",array('username' => $username))."\n";
+            return -1;
+        }
+
+        return 0;
+    }
+
+    /**
+     *  Set user role to "user" by username
+     * @param $username
+     * @return int
+     */
+    public function actionSetUserRoleToUser($username)
+    {
+        $user = User::getUserByUsername($username);
+        if ($user instanceof User && !empty($user)) {
+            if ($user->role == User::ROLE_USER) {
+                echo Yii::t("app","User role is already \"user\"")."\n";
+                return 0;
+            }
+            $user->role = User::ROLE_USER;
+            $user->save();
+            echo Yii::t("app","User status successfully changed")."\n";
+        } elseif ($user == null) {
+            echo Yii::t("app","User with same username \"{username}\" doesn't exist",array('username' => $username))."\n";
+            return -1;
         }
 
         return 0;

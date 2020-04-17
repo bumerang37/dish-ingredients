@@ -18,6 +18,7 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $auth_key
  * @property integer $status
+ * @property integer $role
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
@@ -27,6 +28,9 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+
+    const ROLE_USER = 1;
+    const ROLE_ADMIN = 10;
 
 
     /**
@@ -55,6 +59,18 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            ['role','default','value' => self::ROLE_USER],
+            ['role','in','range' => [self::ROLE_USER, self::ROLE_ADMIN]]
+        ];
+    }
+
+    public function attributeLabels()
+    {
+        return [
+            'username' => Yii::t('app','username'),
+            'password' => Yii::t('app','password'),
+            'status' => Yii::t('app','status'),
+            'role' => Yii::t('app','status'),
         ];
     }
 
@@ -208,5 +224,40 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public static function roles()
+    {
+        return [
+            self::ROLE_USER => Yii::t('app', 'User'),
+            self::ROLE_ADMIN => Yii::t('app', 'Admin'),
+        ];
+    }
+
+    /**
+     * Название роли
+     * @param int $id
+     * @return mixed|null
+     */
+    public function getRoleName(int $id)
+    {
+        $list = self::roles();
+        return $list[$id] ?? null;
+    }
+
+    public function isAdmin()
+    {
+        return ($this->role == self::ROLE_ADMIN);
+    }
+
+
+    public function isUser()
+    {
+        return ($this->role == self::ROLE_USER);
+    }
+
+    public static function getUserByUsername($username)
+    {
+        return static::findOne(['username' => $username]);
     }
 }

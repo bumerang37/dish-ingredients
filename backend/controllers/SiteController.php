@@ -2,6 +2,7 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -12,6 +13,18 @@ use common\models\LoginForm;
  */
 class SiteController extends Controller
 {
+    const ROLE_USER = 1;
+    const ROLE_ADMIN= 10;
+
+    public static function roles()
+    {
+        return [
+            self::ROLE_USER => Yii::t('t','User'),
+            self::ROLE_ADMIN => Yii::t('t','Admin'),
+
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -22,15 +35,36 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
+                        'actions' => ['login', 'error',],
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@']
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'matchCallback' => function($rule, $action) {
+                            $user =  Yii::$app->user->getIdentity();
+                            return $user->isAdmin();
+                        },
+                    ],
+                ],
+            ],
+            [
+                'class' => AccessControl::className(),
+                'only' => ['index'],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
+
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -96,5 +130,21 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function getRoleName(int $id)
+    {
+        $list = self::roles();
+        return $list[$id] ?? null;
+    }
+
+    public function isAdmin()
+    {
+        return ($this->role == self::ROLE_ADMIN);
+    }
+
+    public function isUser()
+    {
+        return ($this->role == self::ROLE_USER);
     }
 }

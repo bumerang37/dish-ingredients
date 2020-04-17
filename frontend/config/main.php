@@ -45,5 +45,15 @@ return [
         ],
 
     ],
+//    'as beforeRequest' => [
+//        'class' => yii\filters\AccessControl::className(),
+//        'except' => ['login'],
+//        'rules' => [
+//            [
+//                'allow' => true,
+//                'roles' => ['@'],
+//            ],
+//        ],
+//    ],
     'params' => $params,
 ];
