@@ -87,6 +87,28 @@ composer install
 8. Создайте несколько блюд и ингредиентов (5-6)
 9. Перейдите в `dish-ingredients`, можно пользоваться поиском
 
+Отправка почты
+---------------
+Чтобы отправить почту, замените в `common/config/main-local.php` следующее: <br>
+```
+'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'viewPath' => '@common/mail',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.gmail.com', // If you use gmail 
+                'username' => 'username',
+                'password' => 'password',
+                'port' => '465',
+                'encryption' => 'ssl'
+            ],
+        ],
+```
+
 Структура проекта:
 -------------------
 
