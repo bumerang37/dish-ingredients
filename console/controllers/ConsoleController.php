@@ -21,25 +21,25 @@ class ConsoleController extends Controller
         $dotenv->load();
 
         if (!empty($_ENV)) {
-            $host = isset($_ENV['HOST']) ? $_ENV['HOST'] : null;
-            $user = isset($_ENV['MYSQL_USER']) ? $_ENV['MYSQL_USER'] : null;
+            $host = !empty($_ENV['HOST']) ? $_ENV['HOST'] : null;
+            $user = !empty($_ENV['MYSQL_USER']) ? $_ENV['MYSQL_USER'] : null;
             $pass = isset($_ENV['MYSQL_PASSWORD']) ? $_ENV['MYSQL_PASSWORD'] : null;
-            $db = isset($_ENV['MYSQL_DATABASE']) ? $_ENV['MYSQL_DATABASE'] : null;
+            $db = !empty($_ENV['MYSQL_DATABASE']) ? $_ENV['MYSQL_DATABASE'] : null;
             if (!isset($host) || !isset($user) || !isset($pass) || !isset($db)) {
-                echo "Variables from \".env\" used for db connection is empty or doesn't exist\n";
+                echo Yii::t('app', "Variables from \". env\" used for db connection is empty or doesn't exist")."\n";
                 return -1;
             }
 
             try {
                 $mysqli = new mysqli($host, $user, $pass, $db);
             } catch (\Exception $e) {
-                echo "Failed to connect to the: \"" . $db . "\" database \n";
+                echo Yii::t('app',"Failed to connect to the \"{dbname}\" database",array('dbname' => $db))."\n";
             }
             if ($e) {
                 $mysqli = new mysqli($host, $user, $pass);
                 $sql = "CREATE DATABASE IF NOT EXISTS " . $db . " CHARACTER SET utf8 COLLATE utf8_general_ci";
                 if ($mysqli->query($sql) === TRUE) {
-                    echo "Database  " . $db . " is successfully created" . "\n";
+                    echo Yii::t('app', "Database \"{dbname}\" is successfully created",array('dbname' => $db)) . "\n";
                 }
             } else {
                 echo Yii::t('app','Database "{dbname}" already exists',array('dbname'=> $db)). "\n";

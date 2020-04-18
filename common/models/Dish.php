@@ -132,4 +132,23 @@ class Dish extends \yii\db\ActiveRecord
     {
         return new DishQuery(get_called_class());
     }
+
+    /**
+     * @param array $ingredient_ids
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getDishByIngredientIds($ingredient_ids)
+    {
+        return DishIngredient::find()
+            ->select(['dish.title', 'dish_ingredient.dish_id', 'COUNT(ingredient.id) as MatchCount'])
+            ->leftJoin('ingredient', 'ingredient.id = dish_ingredient.ingredient_id')
+            ->leftJoin('dish', 'dish.id = dish_ingredient.dish_id')
+            ->andWhere(['in', 'ingredient_id', $ingredient_ids])
+            ->andWhere('dish.active = 1')
+            ->groupBy('dish_ingredient.dish_id')
+            ->having('COUNT(ingredient_id) >=2')
+            ->orderBy('MatchCount DESC')
+            ->asArray()
+            ->all();
+    }
 }

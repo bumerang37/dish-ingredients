@@ -64,9 +64,13 @@ return [
     'No' => 'Нет',
     'Logout (' => 'Выйти (',
     'Choose ingredients' => 'Выберите ингредиенты',
+    'Choose more ingredients' => 'Выберите больше ингредиентов',
+    'No matches were found' => 'Ничего не найдено',
     'Clear all' => 'Очистить все',
     'Contact' => 'Контакты',
     'Find dish by ingredient' => 'Поиск блюд по ингредиентам: ',
+    'Choose ingredient ...' => 'Выберите ингредиент ...',
+
 
 //    end frontend and backend
 
@@ -76,8 +80,12 @@ return [
     'User status successfully changed' => 'Статус пользователя изменен успешно',
     'User with same username "{username}" doesn\'t exist' => 'Пользователя с именем "{username}" не существует',
     'Database "{dbname}" already exists' => 'База данных "{dbname}" уже существует',
+    'Database "{dbname}" is successfully created' => 'База данных "{dbname}" успешно создана',
+    'Failed to connect to the "{dbname}" database' => 'Невозможно подключиться к "{dbname}" базе данных',
+    'Variables from ". env" used for db connection is empty or doesn\'t exist' => 'Переменные окружения в ". env" требуемые для инициализации соеденения с базой данных, пусты или не существуют',
     'Go' => 'Перейти',
-
+    'User {username} successfully created' => 'Пользователь {username} успешно создан',
+    'Email {email} successfully created' => 'Email {email} успешно создан',
 //    end console
 
 

@@ -37,7 +37,6 @@ AppAsset::register($this);
     ]);
     $menuItems = [
         ['label' => Yii::t('app','Home'), 'url' => ['/site/index']],
-        ['label' => Yii::t('app','Contact'), 'url' => ['/site/contact']],
 
     ];
     if (Yii::$app->user->isGuest) {
@@ -72,7 +71,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+        <p class="pull-left">&copy; <?= Html::encode(Yii::$app->params['author']) ?>, <?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

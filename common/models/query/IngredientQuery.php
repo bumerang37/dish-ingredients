@@ -29,6 +29,6 @@ class IngredientQuery extends ActiveQuery
 
     public function active()
     {
-        return $this->andWhere('[[active]]=1');
+        return $this->andWhere(['active' => 1]);
     }
 }

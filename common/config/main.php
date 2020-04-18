@@ -2,6 +2,7 @@
 return [
     'sourceLanguage' => 'en-US',
     'language' => 'ru-RU',
+    'name' => 'Dish/Ingredients',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',

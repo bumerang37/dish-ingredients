@@ -2,26 +2,92 @@
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
     </a>
-    <h1 align="center">Yii 2 Advanced Project Template</h1>
+    <h1 align="center">Dish/Ingredients</h1>
     <br>
 </p>
 
-Yii 2 Advanced Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
-developing complex Web applications with multiple tiers.
+Проект собран на базе расширенного (advanced) шаблона [Yii 2](http://www.yiiframework.com/).
 
-The template includes three tiers: front end, back end, and console, each of which
-is a separate Yii application.
+Приложение позволяет создавать "блюда" и "ингредиенты" в административной части - <b>admin.dish-ingredients/ </b>.
 
-The template is designed to work in a team development environment. It supports
-deploying the application in different environments.
+Доступ к функционалу создания "блюд" и "ингредиентов" есть у пользователей с ролью "администратор".
 
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
+В пользовательской части авторизованные пользователи могут найти блюда по ингредиентам.
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Build Status](https://travis-ci.com/yiisoft/yii2-app-advanced.svg?branch=master)](https://travis-ci.com/yiisoft/yii2-app-advanced)
+Итоговые результаты выводятся согасно критериям, указанным ниже:
 
-DIRECTORY STRUCTURE
+Критерии:
+------------
+
+1. Если найдены блюда с полным совпадением ингредиентов выводятся только они
+2. Если найдены блюда с частичным совпадением ингредиентов - выводим в порядке уменьшения совпадения ингредиентов вплоть до 2х
+3. Если найдены блюда с совпадением менее чем 2 ингредиента или не  найдены вовсе, выводится “Ничего не найдено”
+4. Если выбрано менее 2х ингредиентов не ищем, нужно больше ингредиентов
+
+Сменить роль пользователя можно через консольное приложение командами:
+
+<code>php yii console/set-user-role-to-admin имя пользователя </code> и
+
+<code>php yii console/set-user-role-to-user имя пользователя </code>
+
+
+Минимальные требования:
+------------
+
+Версия вебсервера не ниже PHP 5.4.0.
+
+Проект протестирован на версии PHP 7.2.22 x64
+
+
+Установка
+------------
+
+### Установка через composer
+
+Если в системе не установен [Composer](http://getcomposer.org/), его можно установить выполнив следующие инструкции на сайте
+ [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
+
+Развернуть приложение можно следующим образом:
+
+~~~
+git clone git@github.com:bumerang37/dish-ingredients.git dish-ingredients
+composer self-update
+cd dish-ingredients
+composer install
+~~~
+
+Начало
+---------------
+
+Приложение использует переменные <b>окружения</b>. Перед началом работы убедитесь, что существует файл ```.env``` в корне проекта.
+Затем заполните обязательно заполните переменные: 
+
+```MYSQL_ROOT_PASSWORD```,
+
+``MYSQL_DATABASE``,
+
+``MYSQL_USER``,
+
+``MYSQL_PASSWORD``,
+
+``HOST``
+
+Следуйте следующим инструциям для запуска проекта:
+
+1. Создайте файл `.env` в корне проекта с помощью файла `.env-example`
+ `cp .env-example .env`
+2. Инициализируйте переменные окружения в `.env`, указанные выше
+3. Выполните команду `php init ` в корне проекта, действуйте согласно инструкциям
+4. Выполните команду `php yii console/create-db`, убедитесь что база данных существует
+5. Выполните миграции для текущей базы данных `php yii migrate`
+6. Зайдите на сайт  `dish-ingredients` и создайте пользователя
+7. Чтобы данный пользователь смог создавать блюда и ингредиенты в `admin.dish-ingredients/`, необходимо изменить его роль на "administrator" это можно сделать так<br>
+  `php yii console/set-user-role-to-admin` - Роль пользователя "Admin"
+  `php yii console/set-user-role-to-user` - Роль пользователя "User"
+8. Создайте несколько блюд и ингредиентов (5-6)
+9. Перейдите в `dish-ingredients`, можно пользоваться поиском
+
+Структура проекта:
 -------------------
 
 ```

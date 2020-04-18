@@ -10,5 +10,6 @@ return [
     'backend.protocol' => 'http',
     'frontend.host' => 'dish-ingredients',
     'backend.host' => 'admin.dish-ingredients',
+    'author' => 'bumerang37'
 
 ];
