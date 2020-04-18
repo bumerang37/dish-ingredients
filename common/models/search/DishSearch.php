@@ -64,8 +64,8 @@ class DishSearch extends Dish
                 'title',
                 'active',
                 'ingredients' => [
-                    'asc' => ['dishes_ingredients.dish_id' => SORT_ASC],
-                    'desc' => ['dishes_ingredients.dish_id' => SORT_DESC],
+                    'asc' => ['dish_ingredient.dish_id' => SORT_ASC],
+                    'desc' => ['dish_ingredient.dish_id' => SORT_DESC],
                     'default' => SORT_ASC
                 ],
             ]]);

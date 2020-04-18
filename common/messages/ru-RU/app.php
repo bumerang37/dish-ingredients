@@ -65,6 +65,8 @@ return [
     'Logout (' => 'Выйти (',
     'Choose ingredients' => 'Выберите ингредиенты',
     'Clear all' => 'Очистить все',
+    'Contact' => 'Контакты',
+    'Find dish by ingredient' => 'Поиск блюд по ингредиентам: ',
 
 //    end frontend and backend
 

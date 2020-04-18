@@ -8,7 +8,11 @@ use yii\db\ActiveQuery;
 
 class DishQuery extends ActiveQuery
 {
-
+    public function active()
+    {
+        return $this->andWhere('[[active]]=1');
+    }
+    
     /**
      * @inheritdoc
      * @return \common\models\Dish[]|array
@@ -27,8 +31,5 @@ class DishQuery extends ActiveQuery
         return parent::one($db);
     }
 
-    public function active()
-    {
-        return $this->andWhere('[[active]]=1');
-    }
+
 }

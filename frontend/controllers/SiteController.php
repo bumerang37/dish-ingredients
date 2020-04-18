@@ -1,10 +1,13 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\DishIngredient;
+use common\models\Ingredient;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -15,6 +18,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use yii\web\Response;
 
 /**
  * Site controller
@@ -99,16 +103,6 @@ class SiteController extends Controller
 //    }
 
     /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
-    /**
      * Logs in a user.
      *
      * @return mixed
@@ -164,16 +158,6 @@ class SiteController extends Controller
                 'model' => $model,
             ]);
         }
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 
     /**
@@ -287,5 +271,93 @@ class SiteController extends Controller
         return $this->render('resendVerificationEmail', [
             'model' => $model
         ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionIndex()
+    {
+        $ingredients = Ingredient::find()->select(['title', 'id'])->indexBy('id')->active()->column();
+        return $this->render('index',[
+            'ingredients' => $ingredients
+        ]);
+    }
+
+    /**
+     * @return array in json
+     */
+    public function actionSearch()
+    {
+        if (!Yii::$app->request->isAjax) {
+            Yii::$app->end();
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $selected = \Yii::$app->request->post('selected');
+
+        $matches = DishIngredient::find()
+            ->select(['dish.title', 'dish_ingredient.dish_id', 'COUNT(ingredient.id) as MatchCount'])
+            ->leftJoin('ingredient', 'ingredient.id = dish_ingredient.ingredient_id')
+            ->leftJoin('dish', 'dish.id = dish_ingredient.dish_id')
+            ->andWhere(['in', 'ingredient_id', $selected])
+            ->andWhere('dish.active = 1')
+            ->groupBy('dish_ingredient.dish_id')
+            ->having('COUNT(ingredient_id) >=2')
+            ->orderBy('MatchCount DESC')
+            ->asArray()
+            ->all();
+
+        if (sizeof($selected) < 2) {
+            return [
+                'status' => 'ok',
+                'result' => '<p class="text-warning">Выберите больше ингредиентов</p>'
+            ];
+        }
+
+        if (empty($matches)) {
+            return [
+                'status' => 'ok',
+                'result' => '<p class="text-warning">Ничего не найдено</p>'
+            ];
+        }
+
+        $someMatches = [];
+        $exactMatch = [];
+
+        foreach ($matches as $matchElement) {
+            $ingredientsArr = [];
+            $dishQuery = Ingredient::find()->joinWith('dishesIngredients')->where(['dish_id' => $matchElement['dish_id']]);
+            $dish = $dishQuery->all();
+            $count = $dishQuery->count();
+
+            /**@var $dish Ingredient[] */
+
+            foreach ($dish as $item) {
+                if (!$item->active) {
+                    continue 2;
+                }
+
+                $ingredientsArr[] = in_array($item->id, $selected) ?
+                    Html::tag('span', $item->title, ['class' => 'match-item'])
+                    :
+                    $item->title;
+            }
+
+            $ingredients = implode(', ', $ingredientsArr);
+            $title = $matchElement['title'] . ' [Всего совпадений: ' . $matchElement['MatchCount'] . ']';
+
+            $someMatches[$title] = $ingredients;
+            if ($matchElement['MatchCount'] == $count && $count == sizeof($selected)) {
+                $exactMatch[$title] = $ingredients;
+            }
+        }
+
+        return [
+            'result' => $this->renderAjax('_item', [
+                'dishes' => (!empty($exactMatch)) ? $exactMatch : $someMatches,
+            ]),
+            'status' => 'ok'
+        ];
     }
 }

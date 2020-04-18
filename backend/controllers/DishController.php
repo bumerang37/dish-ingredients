@@ -85,7 +85,7 @@ class DishController extends Controller
         $model->loadDefaultValues();
         $data = Ingredient::find()->select(['title', 'id'])->indexBy('id')->active()->column();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
